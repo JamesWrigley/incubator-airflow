@@ -50,7 +50,12 @@ DEFAULT_SENSITIVE_VARIABLE_FIELDS = (
 
 
 def should_hide_value_for_key(key_name):
-    return any(s in key_name.lower() for s in DEFAULT_SENSITIVE_VARIABLE_FIELDS) \
+    sensitive_fields = configuration.get('admin', 'sensitive_user_fields').split(",")
+    if sensitive_fields[0] == '':
+        sensitive_fields = DEFAULT_SENSITIVE_VARIABLE_FIELDS
+    else:
+        sensitive_fields.extend(DEFAULT_SENSITIVE_VARIABLE_FIELDS)
+    return any(s in key_name.lower() for s in sensitive_fields) \
            and configuration.getboolean('admin', 'hide_sensitive_variable_fields')
 
 

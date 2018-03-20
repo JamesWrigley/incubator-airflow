@@ -783,7 +783,10 @@ class Airflow(BaseView):
             if not attr_name.startswith('_'):
                 attr = getattr(ti, attr_name)
                 if type(attr) != type(self.task):
-                    ti_attrs.append((attr_name, str(attr)))
+                    if wwwutils.should_hide_value_for_key(attr_name):
+                        ti_attrs.append((attr_name, '*' * 8))
+                    else:
+                        ti_attrs.append((attr_name, str(attr)))
 
         task_attrs = []
         for attr_name in dir(task):
@@ -791,7 +794,10 @@ class Airflow(BaseView):
                 attr = getattr(task, attr_name)
                 if type(attr) != type(self.task) and \
                         attr_name not in attr_renderer:
-                    task_attrs.append((attr_name, str(attr)))
+                    if wwwutils.should_hide_value_for_key(attr_name):
+                        task_attrs.append((attr_name, '*' * 8))
+                    else:
+                        task_attrs.append((attr_name, str(attr)))
 
         # Color coding the special attributes that are code
         special_attrs_rendered = {}

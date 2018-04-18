@@ -954,7 +954,7 @@ def connections(args):
         conns = [map(reprlib.repr, conn) for conn in conns]
         print(tabulate(conns, ['Conn Id', 'Conn Type', 'Host', 'Port',
                                'Is Encrypted', 'Is Extra Encrypted', 'Extra'],
-                       tablefmt="fancy_grid"))
+                       tablefmt="fancy_grid").encode("utf-8"))
         return
 
     if args.delete:

@@ -15,7 +15,6 @@ import airflow.api
 
 from airflow.api.common.experimental import pool as pool_api
 from airflow.api.common.experimental import trigger_dag as trigger
-from airflow.api.common.experimental import delete_dag as delete
 from airflow.api.common.experimental.get_task import get_task
 from airflow.api.common.experimental.get_task_instance import get_task_instance
 from airflow.exceptions import AirflowException
@@ -84,23 +83,6 @@ def trigger_dag(dag_id):
 
     response = jsonify(message="Created {}".format(dr))
     return response
-
-
-@csrf.exempt
-@api_experimental.route('/dags/<string:dag_id>', methods=['DELETE'])
-@requires_authentication
-def delete_dag(dag_id):
-    """
-    Delete all DB records related to the specified Dag.
-    """
-    try:
-        count = delete.delete_dag(dag_id)
-    except AirflowException as e:
-        _log.error(e)
-        response = jsonify(error="{}".format(e))
-        response.status_code = getattr(e, 'status', 500)
-        return response
-    return jsonify(message="Removed {} record(s)".format(count), count=count)
 
 
 @api_experimental.route('/test', methods=['GET'])
